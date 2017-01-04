@@ -1,12 +1,15 @@
 package org.thangnv.messenger_gui;
 
+import org.thangnv.messenger_Entity.messageInfo;
 import org.thangnv.messenger_bussiness.ClientChat;
-import org.thangnv.messenger_bussiness.ClientSendFile;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+
+import static javax.swing.JComponent.WHEN_FOCUSED;
 
 
 /**
@@ -14,13 +17,13 @@ import java.awt.event.ActionListener;
  */
 public class JPanelChat extends JFrame implements ActionListener {
     private static final int COLS = 25;
-    private static final int VIEW_ROW = 12;
     private static final int ENTER_ROW = 3;
+    private ClientChat clientChat;
     private JPanel panelNorth = new JPanel(new FlowLayout());
     private JPanel panelSouth = new JPanel(new FlowLayout());
     private JPanel panelCenter = new JPanel();
-    private JTextArea contentMsg;
-    private JTextArea contentChat;
+    private JTextArea contentEnter;
+    private JTextArea contentView;
     private JButton sendImg;
     private JButton sendIcon;
     private JButton sendFile;
@@ -45,20 +48,19 @@ public class JPanelChat extends JFrame implements ActionListener {
         add(panelCenter, BorderLayout.CENTER);
 
         addComponent();
+        keyListener();
 
         setVisible(true);
-        ClientChat clientChat = new ClientChat("localhost", 8000,contentMsg,contentChat);
-        clientChat.startClient();
-
+        clientChat = new ClientChat("localhost", 8000, contentView);
 
     }
 
     public void addComponent() {
         //component of panelSouth
-        contentMsg = new JTextArea(ENTER_ROW,COLS);
-        contentMsg.setLineWrap(true);
-        contentMsg.setWrapStyleWord(true);
-        contentMsg.setBackground(Color.white);
+        contentEnter = new JTextArea(ENTER_ROW, COLS);
+        contentEnter.setLineWrap(true);
+        contentEnter.setWrapStyleWord(true);
+        contentEnter.setBackground(Color.white);
 
         sendImg = new JButton();
         sendImg.setBackground(Color.white);
@@ -77,6 +79,7 @@ public class JPanelChat extends JFrame implements ActionListener {
         sendFile.setPreferredSize(new Dimension(50, 25));
         sendFile.setIcon(Utils.load("image\\Image File-52.png", 50, 25));
         sendFile.setBorder(null);
+        sendFile.addActionListener(this);
 
         btnLike = new JButton();
         btnLike.setBackground(Color.white);
@@ -89,15 +92,15 @@ public class JPanelChat extends JFrame implements ActionListener {
         nameChater.setBackground(Color.white);
 
         //compoment of panelCenter
-        contentChat = new JTextArea();
-        JScrollPane scrollPanelChat = new JScrollPane(contentChat);
-        scrollPanelChat.setBounds(0,0,540,450);
-        contentChat.setBackground(Color.white);
-        contentChat.setLineWrap(true);
-        contentChat.setWrapStyleWord(true);
-        contentChat.setEnabled(false);
+        contentView = new JTextArea();
+        JScrollPane scrollPanelChat = new JScrollPane(contentView);
+        scrollPanelChat.setBounds(0, 0, 540, 450);
+        contentView.setBackground(Color.white);
+        contentView.setLineWrap(true);
+        contentView.setWrapStyleWord(true);
+        contentView.setEnabled(false);
 
-        panelSouth.add(new JScrollPane(contentMsg));
+        panelSouth.add(new JScrollPane(contentEnter));
         panelSouth.add(sendImg);
         panelSouth.add(sendIcon);
         panelSouth.add(sendFile);
@@ -112,10 +115,37 @@ public class JPanelChat extends JFrame implements ActionListener {
         new JPanelChat();
     }
 
+
+    public void keyListener(){
+        InputMap inputMap = contentEnter.getInputMap(WHEN_FOCUSED);
+        ActionMap actionMap = contentEnter.getActionMap();
+        KeyStroke enterStroke = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER,0);
+
+        inputMap.put(enterStroke,enterStroke.toString());
+        actionMap.put(enterStroke.toString(), new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                messageInfo messageInfo = new messageInfo();
+                messageInfo.setContent(contentEnter.getText());
+                clientChat.sendMessage(messageInfo);
+                contentEnter.setText("");
+            }
+        });
+
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
-        if((JButton) e.getSource() == btnLike){
-            new ClientSendFile("localtion",8000);
+        if ((JButton) e.getSource() == sendFile) {
+            JFileChooser fileChooser = new JFileChooser();
+            int select = fileChooser.showOpenDialog(this);
+            if(select == JFileChooser.APPROVE_OPTION){
+                messageInfo messageInfo = new messageInfo();
+                messageInfo.setContent(fileChooser.getSelectedFile());
+                clientChat.sendMessage(messageInfo);
+            }
         }
+
     }
+
 }

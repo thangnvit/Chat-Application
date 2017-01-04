@@ -1,12 +1,12 @@
 package org.thangnv.messenger_bussiness;
 
-import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
-import java.io.*;
-import java.net.Socket;
+import org.thangnv.messenger_Entity.messageInfo;
 
-import static javax.swing.JComponent.WHEN_FOCUSED;
+import javax.swing.*;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
 
 /**
  * Created by DEV on 9/19/2016.
@@ -15,63 +15,46 @@ public class ClientChat {
     private String serverName;
     private int port;
     private Socket socket;
-    private JTextArea contentMsg;
-    private JTextArea contentChat;
-    private InputMap inputMap;
-    private ActionMap actionMap;
+    private ObjectOutputStream writter;
+    private JTextArea contentView;
 
-    public ClientChat(String serverName, int port, JTextArea contentMsg, JTextArea contentChat) {
+
+    public ClientChat(String serverName, int port, JTextArea contentView) {
         this.serverName = serverName;
-        this.contentMsg = contentMsg;
-        this.contentChat = contentChat;
         this.port = port;
+        this.contentView = contentView;
         try {
             socket = new Socket(serverName, port);
+            writter = new ObjectOutputStream(socket.getOutputStream());
         } catch (IOException e) {
             throw new RuntimeException("Failed to connect to port " + port, e);
         }
-    }
 
-    public void startClient() {
         new receiveMesseage().start();
-
-        sendMessage();
     }
 
-    public void sendMessage() {
-        int condition = WHEN_FOCUSED;
-        inputMap = contentMsg.getInputMap(condition);
-        actionMap = contentMsg.getActionMap();
-
-        KeyStroke enterStroke = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0);
-        inputMap.put(enterStroke, enterStroke.toString());
-
-        actionMap.put(enterStroke.toString(), new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    BufferedWriter writter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-                    writter.write("textsystem/" + contentMsg.getText());
-                    writter.newLine();
-                    writter.flush();
-                    contentMsg.setText("");
-                } catch (IOException e1) {
-                    e1.printStackTrace();
-                }
-            }
-        });
+    public void sendMessage(Object objSend) {
+        try {
+            writter.writeObject(objSend);
+            writter.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public class receiveMesseage extends Thread {
+
         @Override
         public void run() {
             try {
-                BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                while (true) {
+                ObjectInputStream reader;
 
-                    contentChat.append(reader.readLine()+ "\n");
+                while (true) {
+                    reader = new ObjectInputStream(socket.getInputStream());
+                    messageInfo obj = (messageInfo) reader.readObject();
+                    contentView.append(obj.getContent() + "\n");
                 }
-            } catch (IOException e) {
+            } catch (IOException | ClassNotFoundException e) {
                 System.out.println("Failed to receive Messeage!");
                 e.printStackTrace();
             }

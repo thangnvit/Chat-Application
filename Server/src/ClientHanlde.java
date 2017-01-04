@@ -1,5 +1,10 @@
-import java.io.*;
+import org.thangnv.messenger_Entity.messageInfo;
+
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.List;
 
 /**
@@ -17,46 +22,23 @@ public class ClientHanlde extends Thread {
     @Override
     public void run() {
         try {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+
+            ObjectInputStream reader = new ObjectInputStream(socket.getInputStream());
             while (true) {
-                String[] data = reader.readLine().split("system/");
-                if (data[0].equals("text")){
-                    for (Socket socket1 : socketList) {
-                        BufferedWriter writter = new BufferedWriter(new OutputStreamWriter(socket1.getOutputStream()));
-                        writter.write(data[1]);
-                        writter.newLine();
-                        writter.flush();
-                    }
-                }else{
-                    DataInputStream input = new DataInputStream(socket.getInputStream());
-                    DataOutputStream output = new DataOutputStream(socket.getOutputStream());
-                    String nameFile = input.readUTF();
-                    if(!checkNameFile(nameFile)){
-                        output.writeUTF("true");
-                        output.flush();
-                        File file = new File("D:\\test\\" + nameFile);
-                        BufferedOutputStream writter = new BufferedOutputStream(new FileOutputStream(file));
-                        byte[] buffer = new byte[1024];
-                        while (input.read(buffer) != -1){
-                            writter.write(buffer);
-                        }
-                        writter.flush();
-                        writter.close();
-                        BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-                        bufferedWriter.write(file.getPath());
-                        bufferedWriter.newLine();
-                        bufferedWriter.close();
-                    }
+
+                messageInfo messageInfo = (messageInfo) reader.readObject();
+                for (Socket socket1 : socketList) {
+                    ObjectOutputStream writter = new ObjectOutputStream(socket1.getOutputStream());
+                    writter.writeObject(messageInfo);
+                    writter.flush();
                 }
             }
+        } catch (ClassNotFoundException | SocketException e) {
+            System.out.println("A socket disconnect");
+            socketList.remove(socket);
         } catch (IOException e) {
-            try {
-                System.out.println("A socket disconnect");
-                socketList.remove(socket);
-                socket.close();
-            } catch (IOException e1) {
-                e.printStackTrace();
-            }
+            System.out.println("A socket disconnect");
+            socketList.remove(socket);
         }
     }
 

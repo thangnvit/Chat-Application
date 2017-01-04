@@ -1,4 +1,4 @@
-package org.thangnv.messenger_data;
+package org.thangnv.messenger_Entity;
 
 
 import java.sql.Connection;
@@ -9,22 +9,17 @@ import java.sql.SQLException;
  * Created by DEV on 12/10/2016.
  */
 public class sqlDataProvider  {
-    private String hostName;
-    private String dataBase;
-    private String user;
-    private String password;
-    private String strConn;
-    private Connection connection = null;
-    public sqlDataProvider(String hostName, String dataBase, String user, String password) {
-        this.hostName = hostName;
-        this.dataBase = dataBase;
-        this.user = user;
-        this.password = password;
-
+    private final String hostName = "localhost";
+    private final String dataBase = "Messenger";
+    private final String user = "sa";
+    private final String password = "123456";
+    private static String strConn;
+    private static Connection connection = null;
+    public sqlDataProvider() {
         strConn = "jdbc:sqlserver://"+ hostName+":1433;databaseName="+dataBase+";user="+user+";password="+password+";";
     }
 
-    public Connection getConnection(){
+    public static Connection getConnection(){
         try {
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
             connection = DriverManager.getConnection(strConn);
@@ -33,6 +28,10 @@ public class sqlDataProvider  {
             e.printStackTrace();
         }
         return connection;
+    }
+
+    public static void main(String[] args) {
+        System.out.println(new sqlDataProvider().getConnection());
     }
 
 }
