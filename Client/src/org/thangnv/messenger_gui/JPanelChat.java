@@ -73,6 +73,7 @@ public class JPanelChat extends JFrame implements ActionListener {
         sendIcon.setPreferredSize(new Dimension(50, 25));
         sendIcon.setIcon(Utils.load("image\\Happy-64.png", 50, 25));
         sendIcon.setBorder(null);
+        sendIcon.addActionListener(this);
 
         sendFile = new JButton();
         sendFile.setBackground(Color.white);
@@ -140,10 +141,19 @@ public class JPanelChat extends JFrame implements ActionListener {
             JFileChooser fileChooser = new JFileChooser();
             int select = fileChooser.showOpenDialog(this);
             if(select == JFileChooser.APPROVE_OPTION){
+
                 messageInfo messageInfo = new messageInfo();
                 messageInfo.setContent(fileChooser.getSelectedFile());
                 clientChat.sendMessage(messageInfo);
             }
+        }
+
+        if((JButton) e.getSource() == sendIcon){
+            JFrame a = new JFrame();
+            System.out.println(sendIcon.getBounds());
+            a.setBounds(sendIcon.getX()+20,sendIcon.getY()+330,230,250);
+            a.add(new JpanelIcon(clientChat));
+            a.setVisible(true);
         }
 
     }
