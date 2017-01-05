@@ -9,13 +9,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 
-import static javax.swing.JComponent.WHEN_FOCUSED;
-
 
 /**
  * Created by DEV on 12/10/2016.
  */
-public class JPanelChat extends JFrame implements ActionListener {
+public class JPanelChat extends JPanel implements ActionListener {
     private static final int COLS = 25;
     private static final int ENTER_ROW = 3;
     private ClientChat clientChat;
@@ -26,7 +24,7 @@ public class JPanelChat extends JFrame implements ActionListener {
     private JButton sendImg;
     private JButton sendIcon;
     private JButton sendFile;
-    private JButton btnLike;
+    private JButton sendLike;
     private JLabel nameChater;
 
     public JPanelChat() throws HeadlessException {
@@ -41,14 +39,13 @@ public class JPanelChat extends JFrame implements ActionListener {
         panelNorth.setBackground(Color.white);
         add(panelNorth, BorderLayout.NORTH);
 
-        panelCenter.setPreferredSize(new Dimension(555,100000000));
+        panelCenter.setPreferredSize(new Dimension(555, 100000000));
         panelCenter.setBackground(Color.BLUE);
-        JScrollPane scrollPane = new JScrollPane(panelCenter);
+        JScrollPane scrollPane = new JScrollPane(panelCenter, 20, 31);
         panelCenter.setLayout(new FlowLayout());
         panelCenter.setBorder(BorderFactory.createLineBorder(Color.GRAY));
         panelCenter.setBackground(Color.white);
-        add(new JScrollPane(panelCenter,20,31), BorderLayout.CENTER);
-
+        add(scrollPane, BorderLayout.CENTER);
         addComponent();
         keyListener();
 
@@ -69,6 +66,7 @@ public class JPanelChat extends JFrame implements ActionListener {
         sendImg.setPreferredSize(new Dimension(50, 25));
         sendImg.setIcon(Utils.load("image\\Picture-64.png", 50, 25));
         sendImg.setBorder(null);
+        sendImg.addActionListener(this);
 
         sendIcon = new JButton();
         sendIcon.setBackground(Color.white);
@@ -84,54 +82,44 @@ public class JPanelChat extends JFrame implements ActionListener {
         sendFile.setBorder(null);
         sendFile.addActionListener(this);
 
-        btnLike = new JButton();
-        btnLike.setBackground(Color.white);
-        btnLike.setPreferredSize(new Dimension(50, 26));
-        btnLike.setIcon(Utils.load("image\\Like It-96.png", 50, 26));
-        btnLike.setBorder(null);
+        sendLike = new JButton();
+        sendLike.setBackground(Color.white);
+        sendLike.setPreferredSize(new Dimension(50, 26));
+        sendLike.setIcon(Utils.load("image\\Like It-96.png", 50, 26));
+        sendLike.setBorder(null);
+        sendLike.addActionListener(this);
 
         //compoment of panelNorth
         nameChater = new JLabel("Chater");
         nameChater.setBackground(Color.white);
 
-        //compoment of panelCenter
-//        contentView = new JTextArea();
-//        JScrollPane scrollPanelChat = new JScrollPane(contentView);
-//        scrollPanelChat.setBounds(0, 0, 540, 450);
-//        contentView.setBackground(Color.white);
-//        contentView.setLineWrap(true);
-//        contentView.setWrapStyleWord(true);
-//        contentView.setEnabled(false);
-
         panelSouth.add(new JScrollPane(contentEnter));
         panelSouth.add(sendImg);
         panelSouth.add(sendIcon);
         panelSouth.add(sendFile);
-        panelSouth.add(btnLike);
-
+        panelSouth.add(sendLike);
         panelNorth.add(nameChater);
 
     }
 
-    public static void main(String[] args) {
-        new JPanelChat();
-    }
 
-
-    public void keyListener(){
+    public void keyListener() {
+        Color backgroundJPanelViewContent = Color.lightGray;
         InputMap inputMap = contentEnter.getInputMap(WHEN_FOCUSED);
         ActionMap actionMap = contentEnter.getActionMap();
-        KeyStroke enterStroke = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER,0);
+        KeyStroke enterStroke = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0);
 
-        inputMap.put(enterStroke,enterStroke.toString());
+        inputMap.put(enterStroke, enterStroke.toString());
         actionMap.put(enterStroke.toString(), new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                messageInfo messageInfo = new messageInfo();
-                messageInfo.setType("text");
-                messageInfo.setContent(contentEnter.getText());
-                clientChat.sendMessage(messageInfo);
+                messageInfo obj = new messageInfo();
+                obj.setType("text");
+                obj.setContent(contentEnter.getText());
+                clientChat.sendMessage(obj);
                 contentEnter.setText("");
+                panelCenter.add(new JPanelViewContent(obj, null, backgroundJPanelViewContent));
+                panelCenter.validate();
             }
         });
 
@@ -139,26 +127,49 @@ public class JPanelChat extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        Color backgroundJPanelViewContent = Color.lightGray;
         if ((JButton) e.getSource() == sendFile) {
             JFileChooser fileChooser = new JFileChooser();
             int select = fileChooser.showOpenDialog(this);
-            if(select == JFileChooser.APPROVE_OPTION){
+            if (select == JFileChooser.APPROVE_OPTION) {
 
                 messageInfo messageInfo = new messageInfo();
                 messageInfo.setType("file");
                 messageInfo.setContent(fileChooser.getSelectedFile());
                 clientChat.sendMessage(messageInfo);
+                panelCenter.add(new JPanelViewContent(messageInfo, null, backgroundJPanelViewContent));
             }
         }
 
-        if((JButton) e.getSource() == sendIcon){
+        if ((JButton) e.getSource() == sendIcon) {
             JFrame a = new JFrame();
-            System.out.println(sendIcon.getBounds());
-            a.setBounds(sendIcon.getX()+20,sendIcon.getY()+330,230,250);
-            a.add(new JpanelIcon(clientChat));
+            a.setBounds(sendIcon.getX() + 20, sendIcon.getY() + 330, 230, 250);
+            a.add(new JpanelIcon(clientChat, panelCenter));
             a.setVisible(true);
+
         }
 
+        if ((JButton) e.getSource() == sendLike) {
+            messageInfo messageInfo = new messageInfo();
+            messageInfo.setType("icon");
+            messageInfo.setContent(Utils.load("image\\Like It-96.png", 30, 30));
+            clientChat.sendMessage(messageInfo);
+            panelCenter.add(new JPanelViewContent(messageInfo, (ImageIcon) messageInfo.getContent(), backgroundJPanelViewContent));
+        }
+
+        if ((JButton) e.getSource() == sendImg) {
+            JFileChooser fileChooser = new JFileChooser();
+            int select = fileChooser.showOpenDialog(this);
+            if (select == JFileChooser.APPROVE_OPTION) {
+                messageInfo messageInfo = new messageInfo();
+                messageInfo.setType("icon");
+                messageInfo.setContent(Utils.load(fileChooser.getSelectedFile().getPath(), 400, 400));
+                clientChat.sendMessage(messageInfo);
+                panelCenter.add(new JPanelViewContent(messageInfo, (ImageIcon) messageInfo.getContent(), backgroundJPanelViewContent));
+            }
+        }
+
+        panelCenter.validate();
     }
 
 }

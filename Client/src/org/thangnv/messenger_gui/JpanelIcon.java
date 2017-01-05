@@ -15,16 +15,19 @@ import java.io.File;
 public class JpanelIcon extends JPanel {
     private String pathIcon;
     private ClientChat clientChat;
-    public JpanelIcon(ClientChat clientChat) {
+    private JPanel panelView;
+
+    public JpanelIcon(ClientChat clientChat, JPanel panelView) {
+        this.panelView = panelView;
         this.clientChat = clientChat;
         setLayout(new FlowLayout());
         setVisible(true);
-        setPreferredSize(new Dimension(250,250));
+        setPreferredSize(new Dimension(250, 250));
 
         addCompoments();
     }
 
-    public void addCompoments(){
+    public void addCompoments() {
         MyActionListener actionListener = new MyActionListener();
         File file = new File("image/icon");
         File[] listFile = file.listFiles();
@@ -35,18 +38,20 @@ public class JpanelIcon extends JPanel {
             btn.setIcon(Utils.load(file1.getPath(), 30, 30));
             btn.addActionListener(actionListener);
             add(btn);
-
         }
     }
 
-    class MyActionListener implements ActionListener{
-
+    class MyActionListener implements ActionListener {
+        Color backgroundJPanelViewContent = Color.lightGray;
         @Override
         public void actionPerformed(ActionEvent e) {
             JButton button = (JButton) e.getSource();
             messageInfo messageInfo = new messageInfo();
+            messageInfo.setType("icon");
             messageInfo.setContent(button.getIcon());
             clientChat.sendMessage(messageInfo);
+            panelView.add(new JPanelViewContent(messageInfo,(ImageIcon) messageInfo.getContent(),backgroundJPanelViewContent));
+            panelView.validate();
         }
     }
 

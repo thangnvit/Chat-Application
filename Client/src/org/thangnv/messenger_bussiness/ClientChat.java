@@ -4,6 +4,7 @@ import org.thangnv.messenger_Entity.messageInfo;
 import org.thangnv.messenger_gui.JPanelViewContent;
 
 import javax.swing.*;
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -45,6 +46,7 @@ public class ClientChat {
     }
 
     public class receiveMesseage extends Thread {
+        Color backgroundJPanelViewContent = Color.pink;
         @Override
         public void run() {
             try {
@@ -54,13 +56,15 @@ public class ClientChat {
                     reader = new ObjectInputStream(socket.getInputStream());
                     messageInfo obj = (messageInfo) reader.readObject();
                     if(obj.getType().equals("text")){
-                        panelView.add(new JPanelViewContent(obj.getIdSender(),obj.getContent().toString(),obj.getDateSend().toString(),null));
+                        panelView.add(new JPanelViewContent(obj,null,backgroundJPanelViewContent));
                     }else if(obj.getType().equals("file")) {
                         File file = (File) obj.getContent();
-                        panelView.add(new JPanelViewContent(obj.getIdSender(),file.getName(),obj.getDateSend().toString(),null));
+                        panelView.add(new JPanelViewContent(obj,null,backgroundJPanelViewContent));
 
+                    }else if(obj.getType().equals("icon")){
+                        ImageIcon imageIcon = (ImageIcon) obj.getContent();
+                        panelView.add(new JPanelViewContent(obj,imageIcon,backgroundJPanelViewContent));
                     }
-//                    new HanlderQueu(queuData).start();
                     panelView.validate();
                 }
             } catch (IOException | ClassNotFoundException e) {

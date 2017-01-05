@@ -28,9 +28,11 @@ public class ClientHanlde extends Thread {
 
                 messageInfo messageInfo = (messageInfo) reader.readObject();
                 for (Socket socket1 : socketList) {
-                    ObjectOutputStream writter = new ObjectOutputStream(socket1.getOutputStream());
-                    writter.writeObject(messageInfo);
-                    writter.flush();
+                    if(socket1.equals(socket) == false){
+                        ObjectOutputStream writter = new ObjectOutputStream(socket1.getOutputStream());
+                        writter.writeObject(messageInfo);
+                        writter.flush();
+                    }
                 }
             }
         } catch (ClassNotFoundException | SocketException e) {
@@ -40,14 +42,5 @@ public class ClientHanlde extends Thread {
             System.out.println("A socket disconnect");
             socketList.remove(socket);
         }
-    }
-
-    public static boolean checkNameFile(String nameFile) {
-        String[] check = {"\\", "\"", ":", "*", "?", ">", "<", "/", "|"};
-        for (String s : check) {
-            if (nameFile.contains(s))
-                return true;
-        }
-        return false;
     }
 }
