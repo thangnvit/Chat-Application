@@ -8,23 +8,31 @@ import java.util.Date;
  */
 public class messageInfo implements Serializable {
     private static final long serialVersionUID = 1L;
+
+    private String type;
     private String idSender;
     private String idRecipient;
-    private Date dateSend;
+    private Date dateSend = new Date();
     private Object content;
 
     public messageInfo() {
     }
 
-    public messageInfo(String idSender, String idRecipient, Date dateSend, Object content) {
+    public messageInfo(String type,String idSender, String idRecipient, Date dateSend, Object content) {
+        this.type = type;
         this.idSender = idSender;
         this.idRecipient = idRecipient;
-        this.dateSend = dateSend;
         this.content = content;
     }
 
+    public String getType() {
+        return type;
+    }
 
+    public void setType(String type) {
 
+        this.type = type;
+    }
 
     public String getIdSender() {
         return idSender;

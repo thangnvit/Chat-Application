@@ -1,8 +1,10 @@
 package org.thangnv.messenger_bussiness;
 
 import org.thangnv.messenger_Entity.messageInfo;
+import org.thangnv.messenger_gui.JPanelViewContent;
 
 import javax.swing.*;
+import java.io.File;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -16,13 +18,13 @@ public class ClientChat {
     private int port;
     private Socket socket;
     private ObjectOutputStream writter;
-    private JTextArea contentView;
+    private JPanel panelView;
 
 
-    public ClientChat(String serverName, int port, JTextArea contentView) {
+    public ClientChat(String serverName, int port, JPanel panelView) {
         this.serverName = serverName;
         this.port = port;
-        this.contentView = contentView;
+        this.panelView = panelView;
         try {
             socket = new Socket(serverName, port);
             writter = new ObjectOutputStream(socket.getOutputStream());
@@ -43,7 +45,6 @@ public class ClientChat {
     }
 
     public class receiveMesseage extends Thread {
-
         @Override
         public void run() {
             try {
@@ -52,7 +53,15 @@ public class ClientChat {
                 while (true) {
                     reader = new ObjectInputStream(socket.getInputStream());
                     messageInfo obj = (messageInfo) reader.readObject();
-                    contentView.append(obj.getContent() + "\n");
+                    if(obj.getType().equals("text")){
+                        panelView.add(new JPanelViewContent(obj.getIdSender(),obj.getContent().toString(),obj.getDateSend().toString(),null));
+                    }else if(obj.getType().equals("file")) {
+                        File file = (File) obj.getContent();
+                        panelView.add(new JPanelViewContent(obj.getIdSender(),file.getName(),obj.getDateSend().toString(),null));
+
+                    }
+//                    new HanlderQueu(queuData).start();
+                    panelView.validate();
                 }
             } catch (IOException | ClassNotFoundException e) {
                 System.out.println("Failed to receive Messeage!");

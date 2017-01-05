@@ -10,6 +10,7 @@ import java.util.Date;
  */
 public class messageInfo implements Serializable {
     private static final long serialVersionUID = 1L;
+    private String type;
     private String idSender;
     private String idRecipient;
     private Date dateSend;
@@ -18,7 +19,8 @@ public class messageInfo implements Serializable {
     public messageInfo() {
     }
 
-    public messageInfo(String idSender, String idRecipient, Date dateSend, Object content) {
+    public messageInfo(String type,String idSender, String idRecipient, Date dateSend, Object content) {
+        this.type = type;
         this.idSender = idSender;
         this.idRecipient = idRecipient;
         this.dateSend = dateSend;
@@ -32,6 +34,9 @@ public class messageInfo implements Serializable {
         content = rs.getString("Content");
     }
 
+    public String getType() {
+        return type;
+    }
 
     public String getIdSender() {
         return idSender;
@@ -52,6 +57,10 @@ public class messageInfo implements Serializable {
     public void setIdSender(String idSender) {
 
         this.idSender = idSender;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public void setIdRecipient(String idRecipient) {

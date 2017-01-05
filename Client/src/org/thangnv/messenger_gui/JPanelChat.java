@@ -23,7 +23,6 @@ public class JPanelChat extends JFrame implements ActionListener {
     private JPanel panelSouth = new JPanel(new FlowLayout());
     private JPanel panelCenter = new JPanel();
     private JTextArea contentEnter;
-    private JTextArea contentView;
     private JButton sendImg;
     private JButton sendIcon;
     private JButton sendFile;
@@ -42,16 +41,19 @@ public class JPanelChat extends JFrame implements ActionListener {
         panelNorth.setBackground(Color.white);
         add(panelNorth, BorderLayout.NORTH);
 
-        panelCenter.setLayout(null);
+        panelCenter.setPreferredSize(new Dimension(555,100000000));
+        panelCenter.setBackground(Color.BLUE);
+        JScrollPane scrollPane = new JScrollPane(panelCenter);
+        panelCenter.setLayout(new FlowLayout());
         panelCenter.setBorder(BorderFactory.createLineBorder(Color.GRAY));
         panelCenter.setBackground(Color.white);
-        add(panelCenter, BorderLayout.CENTER);
+        add(new JScrollPane(panelCenter,20,31), BorderLayout.CENTER);
 
         addComponent();
         keyListener();
 
         setVisible(true);
-        clientChat = new ClientChat("localhost", 8000, contentView);
+        clientChat = new ClientChat("localhost", 8000, panelCenter);
 
     }
 
@@ -93,13 +95,13 @@ public class JPanelChat extends JFrame implements ActionListener {
         nameChater.setBackground(Color.white);
 
         //compoment of panelCenter
-        contentView = new JTextArea();
-        JScrollPane scrollPanelChat = new JScrollPane(contentView);
-        scrollPanelChat.setBounds(0, 0, 540, 450);
-        contentView.setBackground(Color.white);
-        contentView.setLineWrap(true);
-        contentView.setWrapStyleWord(true);
-        contentView.setEnabled(false);
+//        contentView = new JTextArea();
+//        JScrollPane scrollPanelChat = new JScrollPane(contentView);
+//        scrollPanelChat.setBounds(0, 0, 540, 450);
+//        contentView.setBackground(Color.white);
+//        contentView.setLineWrap(true);
+//        contentView.setWrapStyleWord(true);
+//        contentView.setEnabled(false);
 
         panelSouth.add(new JScrollPane(contentEnter));
         panelSouth.add(sendImg);
@@ -108,7 +110,6 @@ public class JPanelChat extends JFrame implements ActionListener {
         panelSouth.add(btnLike);
 
         panelNorth.add(nameChater);
-        panelCenter.add(scrollPanelChat);
 
     }
 
@@ -127,6 +128,7 @@ public class JPanelChat extends JFrame implements ActionListener {
             @Override
             public void actionPerformed(ActionEvent e) {
                 messageInfo messageInfo = new messageInfo();
+                messageInfo.setType("text");
                 messageInfo.setContent(contentEnter.getText());
                 clientChat.sendMessage(messageInfo);
                 contentEnter.setText("");
@@ -143,6 +145,7 @@ public class JPanelChat extends JFrame implements ActionListener {
             if(select == JFileChooser.APPROVE_OPTION){
 
                 messageInfo messageInfo = new messageInfo();
+                messageInfo.setType("file");
                 messageInfo.setContent(fileChooser.getSelectedFile());
                 clientChat.sendMessage(messageInfo);
             }
