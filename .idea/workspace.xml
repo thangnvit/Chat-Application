@@ -5,17 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="42cdc918-a594-492e-abe1-0cdb4adbd148" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Client/src/org/thangnv/messenger_bussiness/HanlderQueu.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Client/src/org/thangnv/messenger_gui/JPanelViewContent.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Client/org/thangnv/messenger_bussiness/ClientChat$receiveMesseage.class" afterPath="$PROJECT_DIR$/out/production/Client/org/thangnv/messenger_bussiness/ClientChat$receiveMesseage.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Client/org/thangnv/messenger_bussiness/ClientChat.class" afterPath="$PROJECT_DIR$/out/production/Client/org/thangnv/messenger_bussiness/ClientChat.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Client/org/thangnv/messenger_gui/JPanelChat.class" afterPath="$PROJECT_DIR$/out/production/Client/org/thangnv/messenger_gui/JPanelChat.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Client/src/Main.java" afterPath="$PROJECT_DIR$/Client/src/Main.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Client/src/org/thangnv/messenger_Entity/messageInfo.java" afterPath="$PROJECT_DIR$/Client/src/org/thangnv/messenger_Entity/messageInfo.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Client/src/org/thangnv/messenger_bussiness/ClientChat.java" afterPath="$PROJECT_DIR$/Client/src/org/thangnv/messenger_bussiness/ClientChat.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Client/src/org/thangnv/messenger_gui/JPanelChat.java" afterPath="$PROJECT_DIR$/Client/src/org/thangnv/messenger_gui/JPanelChat.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Server/src/org/thangnv/messenger_Entity/messageInfo.java" afterPath="$PROJECT_DIR$/Server/src/org/thangnv/messenger_Entity/messageInfo.java" />
     </list>
     <ignored path="Messenger.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -842,7 +835,14 @@
       <option name="project" value="LOCAL" />
       <updated>1483583851139</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="ahi">
+      <created>1483607239007</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1483607239007</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TodoView">
