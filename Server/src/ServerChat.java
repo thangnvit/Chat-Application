@@ -44,7 +44,7 @@ public class ServerChat {
 
 
     public static void main(String[] args) {
-        ServerChat serverChat = new ServerChat(8000);
+        ServerChat serverChat = new ServerChat(8001);
         serverChat.startServer();
     }
 }

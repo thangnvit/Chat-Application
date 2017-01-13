@@ -1,6 +1,8 @@
 package org.thangnv.messenger_Entity;
 
 import java.io.Serializable;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Date;
 
 /**
@@ -8,7 +10,6 @@ import java.util.Date;
  */
 public class messageInfo implements Serializable {
     private static final long serialVersionUID = 1L;
-
     private String type;
     private String idSender;
     private String idRecipient;
@@ -25,13 +26,15 @@ public class messageInfo implements Serializable {
         this.content = content;
     }
 
-    public String getType() {
-        return type;
+    public void messageInfoResultSet(ResultSet rs) throws SQLException {
+        idSender = rs.getString("IdSender");
+        idRecipient = rs.getString("IdRecipient");
+        dateSend = rs.getDate("DateSend");
+        content = rs.getString("Content");
     }
 
-    public void setType(String type) {
-
-        this.type = type;
+    public String getType() {
+        return type;
     }
 
     public String getIdSender() {
@@ -53,6 +56,10 @@ public class messageInfo implements Serializable {
     public void setIdSender(String idSender) {
 
         this.idSender = idSender;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public void setIdRecipient(String idRecipient) {

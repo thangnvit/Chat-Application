@@ -5,10 +5,7 @@ import org.thangnv.messenger_gui.JPanelViewContent;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.File;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.net.Socket;
 
 /**
@@ -44,6 +41,23 @@ public class ClientChat {
             e.printStackTrace();
         }
     }
+    public void saveFile(File inputFile,String savaPath){
+        File file = new File(savaPath);
+        try {
+            BufferedInputStream reader = new BufferedInputStream(new FileInputStream(inputFile));
+            BufferedOutputStream writter = new BufferedOutputStream(new FileOutputStream(file));
+            byte[] buffer = new byte[1024];
+            while (reader.read(buffer) != -1){
+                writter.write(buffer);
+                writter.flush();
+            }
+            writter.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     public class receiveMesseage extends Thread {
         Color backgroundJPanelViewContent = Color.pink;
@@ -59,6 +73,7 @@ public class ClientChat {
                         panelView.add(new JPanelViewContent(obj,null,backgroundJPanelViewContent));
                     }else if(obj.getType().equals("file")) {
                         File file = (File) obj.getContent();
+                        saveFile(file,"D:\\Save_hi\\"+ file.getName());
                         panelView.add(new JPanelViewContent(obj,null,backgroundJPanelViewContent));
 
                     }else if(obj.getType().equals("icon")){

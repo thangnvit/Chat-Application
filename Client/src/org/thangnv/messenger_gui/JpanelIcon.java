@@ -43,6 +43,7 @@ public class JpanelIcon extends JPanel {
 
     class MyActionListener implements ActionListener {
         Color backgroundJPanelViewContent = Color.lightGray;
+
         @Override
         public void actionPerformed(ActionEvent e) {
             JButton button = (JButton) e.getSource();
@@ -50,7 +51,7 @@ public class JpanelIcon extends JPanel {
             messageInfo.setType("icon");
             messageInfo.setContent(button.getIcon());
             clientChat.sendMessage(messageInfo);
-            panelView.add(new JPanelViewContent(messageInfo,(ImageIcon) messageInfo.getContent(),backgroundJPanelViewContent));
+            panelView.add(new JPanelViewContent(messageInfo, (ImageIcon) messageInfo.getContent(), backgroundJPanelViewContent));
             panelView.validate();
         }
     }

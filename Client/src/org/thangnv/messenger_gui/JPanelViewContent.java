@@ -56,8 +56,5 @@ public class JPanelViewContent extends JPanel {
 
     }
 
-    public static void main(String[] args) {
-
-    }
 
 }

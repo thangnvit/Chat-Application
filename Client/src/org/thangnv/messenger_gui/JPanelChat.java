@@ -16,6 +16,7 @@ import java.awt.event.KeyEvent;
 public class JPanelChat extends JPanel implements ActionListener {
     private static final int COLS = 25;
     private static final int ENTER_ROW = 3;
+    private String accountId;
     private ClientChat clientChat;
     private JPanel panelNorth = new JPanel(new FlowLayout());
     private JPanel panelSouth = new JPanel(new FlowLayout());
@@ -27,7 +28,8 @@ public class JPanelChat extends JPanel implements ActionListener {
     private JButton sendLike;
     private JLabel nameChater;
 
-    public JPanelChat() throws HeadlessException {
+    public JPanelChat(String accountId) throws HeadlessException {
+        this.accountId = accountId;
         setBounds(200, 100, 555, 550);
         setLayout(new BorderLayout());
 
@@ -36,11 +38,11 @@ public class JPanelChat extends JPanel implements ActionListener {
         add(panelSouth, BorderLayout.SOUTH);
 
         panelNorth.setBorder(BorderFactory.createLineBorder(Color.GRAY));
-        panelNorth.setBackground(Color.white);
+        panelNorth.setBackground(Color.lightGray);
         add(panelNorth, BorderLayout.NORTH);
 
         panelCenter.setPreferredSize(new Dimension(555, 100000000));
-        panelCenter.setBackground(Color.BLUE);
+        panelCenter.setBackground(Color.white);
         JScrollPane scrollPane = new JScrollPane(panelCenter, 20, 31);
         panelCenter.setLayout(new FlowLayout());
         panelCenter.setBorder(BorderFactory.createLineBorder(Color.GRAY));
@@ -50,7 +52,7 @@ public class JPanelChat extends JPanel implements ActionListener {
         keyListener();
 
         setVisible(true);
-        clientChat = new ClientChat("localhost", 8000, panelCenter);
+        clientChat = new ClientChat("localhost", 8001, panelCenter);
 
     }
 
@@ -91,6 +93,7 @@ public class JPanelChat extends JPanel implements ActionListener {
 
         //compoment of panelNorth
         nameChater = new JLabel("Chater");
+        nameChater.setFont(new Font("Dialog",Font.TYPE1_FONT,13));
         nameChater.setBackground(Color.white);
 
         panelSouth.add(new JScrollPane(contentEnter));
@@ -145,6 +148,7 @@ public class JPanelChat extends JPanel implements ActionListener {
             JFrame a = new JFrame();
             a.setBounds(sendIcon.getX() + 20, sendIcon.getY() + 330, 230, 250);
             a.add(new JpanelIcon(clientChat, panelCenter));
+            a.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
             a.setVisible(true);
 
         }
@@ -171,5 +175,7 @@ public class JPanelChat extends JPanel implements ActionListener {
 
         panelCenter.validate();
     }
+
+
 
 }
